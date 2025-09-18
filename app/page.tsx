@@ -145,7 +145,7 @@ export default function HomePage() {
               />
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Aditya University</h1>
-                <p className="text-sm text-gray-600">Smart Student Hub</p>
+                <p className="text-sm text-gray-600">Campus360</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -175,13 +175,13 @@ export default function HomePage() {
           <div className="text-center animate-fade-in">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Award className="h-4 w-4" />
-              Smart Student Hub Platform
+              Campus360
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Smart Student</span>
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Campus360</span>
               <br />
-              <span className="text-foreground">Hub System</span>
+      
             </h1>
             
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
@@ -372,7 +372,7 @@ export default function HomePage() {
           {/* Footer */}
           <div className="text-center mt-16 pt-8 border-t border-border/50">
             <p className="text-muted-foreground text-sm">
-              © 2024 Smart Student Hub. Empowering educational excellence through digital innovation.
+              © 2025 Campus360. Empowering educational excellence through digital innovation.
             </p>
           </div>
         </div>

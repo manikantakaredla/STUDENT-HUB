@@ -7,7 +7,7 @@ import { Suspense } from "react"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Aditya University - Smart Student Hub",
+  title: "Aditya University - Campus360",
   description: "Comprehensive student portal for academic excellence",
   generator: "v0.app",
 }
