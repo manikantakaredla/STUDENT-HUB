@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { BadgeCheck } from "lucide-react"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Dialog,
@@ -34,6 +36,7 @@ import {
   MessageSquare,
   Filter,
   BarChart3,
+  DollarSign, // Added icon for grants
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import {
@@ -49,7 +52,67 @@ import {
   Cell,
 } from "recharts"
 
+
 // Mock data for faculty dashboard
+const approvedGrants = [
+  {
+    id: "AG001",
+    studentName: "Raj Kumar",
+    studentId: "ST2024006",
+    title: "Blockchain in Education",
+    description: "Proposal for implementing blockchain certificates in academics",
+    department: "Information Technology",
+    documents: ["final_proposal.pdf"],
+    submittedDate: "2024-01-25",
+    approvedDate: "2024-02-05",
+  },
+  {
+    id: "AG002",
+    studentName: "Ananya Sharma",
+    studentId: "ST2024007",
+    title: "AI-Based Medical Diagnosis System",
+    description: "Research on using AI for faster and more accurate medical image analysis.",
+    department: "Computer Science",
+    documents: ["proposal.pdf", "dataset_info.docx"],
+    submittedDate: "2024-02-01",
+    approvedDate: "2024-02-10",
+  },
+  {
+    id: "AG003",
+    studentName: "Vikram Patel",
+    studentId: "ST2024008",
+    title: "Renewable Energy Monitoring System",
+    description: "IoT project for monitoring solar and wind energy production in real-time.",
+    department: "Electronics",
+    documents: ["system_design.pdf", "budget.xlsx"],
+    submittedDate: "2024-02-05",
+    approvedDate: "2024-02-15",
+  },
+  {
+    id: "AG004",
+    studentName: "Meera Nair",
+    studentId: "ST2024009",
+    title: "Smart Traffic Management with IoT",
+    description: "Developing an IoT-based solution to optimize traffic flow in urban areas.",
+    department: "Civil",
+    documents: ["traffic_model.pdf", "implementation_plan.docx"],
+    submittedDate: "2024-02-08",
+    approvedDate: "2024-02-18",
+  },
+  {
+    id: "AG005",
+    studentName: "Arjun Reddy",
+    studentId: "ST2024010",
+    title: "Drone Technology for Precision Agriculture",
+    description: "Using drones with AI to monitor crop health and optimize irrigation.",
+    department: "Mechanical",
+    documents: ["drone_specs.pdf", "agri_study.pdf"],
+    submittedDate: "2024-02-12",
+    approvedDate: "2024-02-22",
+  },
+]
+
+
 const pendingActivities = [
   {
     id: 1,
@@ -89,6 +152,32 @@ const pendingActivities = [
     documents: ["participation_certificate.pdf"],
     submittedDate: "2024-01-09",
     department: "Information Technology",
+  },
+]
+
+// NEW: Mock data for pending grants
+const pendingGrants = [
+  {
+    id: "GRT001",
+    studentName: "Michael Brown",
+    studentId: "ST2024004",
+    title: "AI-Powered Drone for Agriculture",
+    description: "A research grant proposal for developing a drone system to monitor crop health using AI.",
+    amountRequested: 5000,
+    documents: ["grant_proposal.pdf", "budget_breakdown.xlsx"],
+    submittedDate: "2024-01-20",
+    department: "Computer Science",
+  },
+  {
+    id: "GRT002",
+    studentName: "Emily Davis",
+    studentId: "ST2024005",
+    title: "IoT-Based Smart Home System",
+    description: "Proposal for funding a project to create an affordable and scalable smart home automation system.",
+    amountRequested: 3500,
+    documents: ["project_outline.pdf"],
+    submittedDate: "2024-01-22",
+    department: "Electronics",
   },
 ]
 
@@ -165,6 +254,10 @@ export default function FacultyDashboard() {
   })
   const router = useRouter()
 
+  // NEW: State for grant approvals
+  const [selectedGrant, setSelectedGrant] = useState<any>(null)
+  const [grantRejectionReason, setGrantRejectionReason] = useState("")
+
   useEffect(() => {
     const storedUserData = localStorage.getItem("userData")
     if (storedUserData) {
@@ -194,6 +287,23 @@ export default function FacultyDashboard() {
     // In real app, update database
   }
 
+  // NEW: Handler functions for grants
+  const handleApproveGrant = (grantId: string) => {
+    console.log(`Approved grant ${grantId}`)
+    // In a real app, you would update the database here.
+  }
+
+  const handleRejectGrant = (grantId: string) => {
+    if (!grantRejectionReason.trim()) {
+      alert("Please provide a rejection reason for the grant")
+      return
+    }
+    console.log(`Rejected grant ${grantId} with reason: ${grantRejectionReason}`)
+    setGrantRejectionReason("")
+    setSelectedGrant(null)
+    // In a real app, you would update the database here.
+  }
+
   const handleExcelUpload = () => {
     console.log("Excel file uploaded and processed")
     setIsExcelDialogOpen(false)
@@ -218,6 +328,7 @@ export default function FacultyDashboard() {
   const stats = {
     totalStudents: studentsList.length,
     pendingApprovals: pendingActivities.length,
+    pendingGrants: pendingGrants.length, // Added grant stats
     totalSubmissions: 156,
     approvalRate: 87,
   }
@@ -239,7 +350,7 @@ export default function FacultyDashboard() {
               />
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Faculty Dashboard</h1>
-                <p className="text-sm text-gray-600">Activity Management & Student Oversight</p>
+                <p className="text-sm text-gray-600">Activity & Grant Management</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -379,15 +490,15 @@ export default function FacultyDashboard() {
                 </div>
                 <div className="text-right">
                   <div className="text-sm text-green-200 mb-1">Pending Approvals</div>
-                  <div className="text-4xl font-bold">{stats.pendingApprovals}</div>
+                  <div className="text-4xl font-bold">{stats.pendingApprovals + stats.pendingGrants}</div>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Key Metrics - UPDATED GRID LAYOUT */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           <Card className="hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -406,11 +517,26 @@ export default function FacultyDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Pending Approvals</p>
+                  <p className="text-sm font-medium text-gray-600">Pending Activities</p>
                   <p className="text-3xl font-bold text-yellow-600">{stats.pendingApprovals}</p>
                 </div>
                 <div className="p-3 bg-yellow-100 rounded-full">
                   <Clock className="h-6 w-6 text-yellow-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* NEW: Pending Grants Stat Card */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Pending Grants</p>
+                  <p className="text-3xl font-bold text-teal-600">{stats.pendingGrants}</p>
+                </div>
+                <div className="p-3 bg-teal-100 rounded-full">
+                  <DollarSign className="h-6 w-6 text-teal-600" />
                 </div>
               </div>
             </CardContent>
@@ -445,9 +571,11 @@ export default function FacultyDashboard() {
           </Card>
         </div>
 
+        {/* UPDATED: Added new tab and changed grid columns to 5 */}
         <Tabs defaultValue="approvals" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="approvals">Pending Approvals</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="approvals">Pending Activities</TabsTrigger>
+            <TabsTrigger value="grants">Grant Approvals</TabsTrigger>
             <TabsTrigger value="students">Student Management</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
@@ -552,6 +680,59 @@ export default function FacultyDashboard() {
                               <Eye className="h-4 w-4 mr-1" />
                               View Details
                             </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* NEW: Approved Grants Tab */}
+          <TabsContent value="grants" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BadgeCheck className="h-5 w-5" />
+                  <span>Approved Grant History</span>
+                </CardTitle>
+                <CardDescription>A record of all student grants that have been approved.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {approvedGrants.map((grant) => (
+                    <Card key={grant.id} className="border-l-4 border-l-blue-500">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold mb-2">{grant.title}</h3>
+                            <div className="grid grid-cols-2 gap-4 mb-3">
+                              <div>
+                                <p className="text-sm text-gray-600">
+                                  <strong>Student:</strong> {grant.studentName} ({grant.studentId})
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  <strong>Department:</strong> {grant.department}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-600">
+                                  <strong>Submitted:</strong> {grant.submittedDate}
+                                </p>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 mb-3">{grant.description}</p>
+                            <div className="flex items-center space-x-2 text-sm text-gray-500">
+                              <span>Documents: {grant.documents.join(", ")}</span>
+                            </div>
+                          </div>
+                          <div className="ml-4 flex-shrink-0">
+                            <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 text-md py-2 px-3">
+                              <BadgeCheck className="h-5 w-5 mr-2" />
+                              Verified on {grant.approvedDate}
+                            </Badge>
                           </div>
                         </div>
                       </CardContent>
@@ -847,3 +1028,4 @@ export default function FacultyDashboard() {
     </div>
   )
 }
+
